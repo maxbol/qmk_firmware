@@ -16,7 +16,10 @@
 
 #pragma once
 
-#define TAPPING_TERM 175
+#define TAPPING_TERM 120
+
+#define HOLD_ON_OTHER_KEY_PRESS
+#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
 
 #ifdef AUDIO_ENABLE
 #    define STARTUP_SONG SONG(PLANCK_SOUND)
