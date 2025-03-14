@@ -29,9 +29,11 @@ enum planck_keycodes { PLOVER = SAFE_RANGE, BACKLIT, EXT_PLV, LBRC_EQL };
 // tap_dance_action_t tap_dance_actions[] = {[TD_LOWER_TAB] = ACTION_TAP_DANCE_DOUBLE(LOWER, KC_TAB), [TD_LCTRL_ENTER] = ACTION_TAP_DANCE_DOUBLE(KC_LCTL, KC_ENTER), [TD_LSHIFT_SPACE] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_SPC), [TD_RAISE_BS] = ACTION_TAP_DANCE_DOUBLE(RAISE, KC_BSPC)};
 
 #define LT_LOWER_TAB LT(_LOWER, KC_TAB)
+#define LT_RAISE_BSPC LT(_RAISE, KC_BSPC)
+#define LT_RAISE_D LT(_RAISE, KC_D)
+#define LT_RAISE_K LT(_RAISE, KC_K)
 #define MT_LCTL_ENTER MT(MOD_LCTL, KC_ENTER)
 #define MT_LSFT_SPC MT(MOD_LSFT, KC_SPC)
-#define LT_RAISE_BSPC LT(_RAISE, KC_BSPC)
 #define MT_LGUI_F MT(MOD_LGUI, KC_F)
 #define MT_LGUI_J MT(MOD_LGUI, KC_J)
 #define MT_LALT_Z MT(MOD_LALT, KC_Z)
@@ -55,6 +57,8 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
         case MT_LGUI_F:
         case MT_LGUI_J:
         case MT_LALT_Z:
+        case LT_RAISE_D:
+        case LT_RAISE_K:
             return false;
         default:
             return true;
@@ -77,7 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_QWERTY] = LAYOUT_planck_grid(
     KC_MINS,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_LBRC,
-    MT_LCTL_ESC,  KC_A,    KC_S,    KC_D,    MT_LGUI_F,    KC_G,    KC_H,    MT_LGUI_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+    MT_LCTL_ESC,  KC_A,    KC_S,    LT_RAISE_D,    MT_LGUI_F,    KC_G,    KC_H,    MT_LGUI_J,    LT_RAISE_K,    KC_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, MT_LALT_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_EQL,
     KC_EQL, KC_EQL, KC_EQL, KC_EQL, LT_LOWER_TAB, MT_LCTL_ENTER, MT_LSFT_SPC, LT_RAISE_BSPC, KC_EQL, KC_EQL, KC_EQL,   KC_RBRC
 ),
