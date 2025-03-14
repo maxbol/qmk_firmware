@@ -18,26 +18,29 @@
 
 enum planck_layers { _QWERTY, _LOWER, _RAISE, _ADJUST };
 
-enum planck_keycodes { PLOVER = SAFE_RANGE, BACKLIT, EXT_PLV, LBRC_EQL };
+enum planck_keycodes { PLOVER = SAFE_RANGE, BACKLIT, EXT_PLV, LBRC_EQL, ARROW_NOT };
 
 // enum { TD_LOWER_TAB, TD_LCTRL_ENTER, TD_LSHIFT_SPACE, TD_RAISE_BS }
 
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
 
-// tap_dance_action_t tap_dance_actions[] = {[TD_LCTRL_ENTER] = ACTION_TAP_DANCE_DOUBLE(KC_ENTER, KC_LCTL), [TD_LSHIFT_SPACE] = ACTION_TAP_DANCE_DOUBLE(KC_SPC, KC_LSFT)};
-// tap_dance_action_t tap_dance_actions[] = {[TD_LOWER_TAB] = ACTION_TAP_DANCE_DOUBLE(LOWER, KC_TAB), [TD_LCTRL_ENTER] = ACTION_TAP_DANCE_DOUBLE(KC_LCTL, KC_ENTER), [TD_LSHIFT_SPACE] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_SPC), [TD_RAISE_BS] = ACTION_TAP_DANCE_DOUBLE(RAISE, KC_BSPC)};
-
 #define LT_LOWER_TAB LT(_LOWER, KC_TAB)
 #define LT_RAISE_BSPC LT(_RAISE, KC_BSPC)
-#define LT_RAISE_D LT(_RAISE, KC_D)
-#define LT_RAISE_K LT(_RAISE, KC_K)
+#define LT_RAISE_L LT(_RAISE, KC_L)
+#define LT_RAISE_S LT(_RAISE, KC_S)
+#define MT_LALT_Z MT(MOD_LALT, KC_Z)
 #define MT_LCTL_ENTER MT(MOD_LCTL, KC_ENTER)
-#define MT_LSFT_SPC MT(MOD_LSFT, KC_SPC)
+#define MT_LCTL_ESC MT(MOD_LCTL, KC_ESC)
+#define MT_LGUI_EQL MT(MOD_LGUI, KC_EQL)
 #define MT_LGUI_F MT(MOD_LGUI, KC_F)
 #define MT_LGUI_J MT(MOD_LGUI, KC_J)
-#define MT_LALT_Z MT(MOD_LALT, KC_Z)
-#define MT_LCTL_ESC MT(MOD_LCTL, KC_ESC)
+#define MT_LSFT_D MT(MOD_LSFT, KC_D)
+#define MT_LSFT_K MT(MOD_LSFT, KC_K)
+#define MT_LSFT_SLSH MT(MOD_LSFT, KC_SLSH)
+#define MT_LSFT_SPC MT(MOD_LSFT, KC_SPC)
+#define MT_RGUI_LPRN MT(MOD_RGUI, KC_LPRN)
+#define MT_RSFT_RPRN MT(MOD_RSFT, KC_RPRN)
 
 const uint16_t PROGMEM lbrc_combo[] = {KC_X, KC_C, COMBO_END};
 const uint16_t PROGMEM rbrc_combo[] = {KC_COMM, KC_DOT, COMBO_END};
@@ -51,19 +54,30 @@ combo_t key_combos[] = {
     COMBO(rbrk_combo, KC_RBRC),
 };
 
-bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MT_LSFT_SPC:
-        case MT_LGUI_F:
-        case MT_LGUI_J:
-        case MT_LALT_Z:
-        case LT_RAISE_D:
-        case LT_RAISE_K:
-            return false;
+            return 120;
         default:
-            return true;
+            return TAPPING_TERM;
     }
 }
+
+// bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+//     switch (keycode) {
+//         case MT_LSFT_SPC:
+//             return false;
+//         default:
+//             return true;
+//     }
+// }
+
+const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT_planck_grid(
+    'L',  'L',    'L',    'L',    'L',    'L',    'R',    'R',    'R',    'R',    'R', 'R',
+    'L',  'L',    'L',    'L',    'L',    'L',    'R',    'R',    'R',    'R',    'R', 'R',
+    'L', 'L',    'L',    'L',    'L',    'L',    'R',    'R',    'R', 'R',  'R', 'R',
+    'L', 'L', 'L', 'L', '*', '*', '*', '*', 'R', 'R', 'R',   'R'
+);
 
 /* clang-format off */
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -81,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_QWERTY] = LAYOUT_planck_grid(
     KC_MINS,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_LBRC,
-    MT_LCTL_ESC,  KC_A,    KC_S,    LT_RAISE_D,    MT_LGUI_F,    KC_G,    KC_H,    MT_LGUI_J,    LT_RAISE_K,    KC_L,    KC_SCLN, KC_QUOT,
+    MT_LCTL_ESC,  KC_A,    LT_RAISE_S,    KC_D,    MT_LGUI_F,    KC_G,    KC_H,    MT_LGUI_J,    KC_K,    LT_RAISE_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, MT_LALT_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_EQL,
     KC_EQL, KC_EQL, KC_EQL, KC_EQL, LT_LOWER_TAB, MT_LCTL_ENTER, MT_LSFT_SPC, LT_RAISE_BSPC, KC_EQL, KC_EQL, KC_EQL,   KC_RBRC
 ),
@@ -116,9 +130,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_RAISE] = LAYOUT_planck_grid(
-    KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,
-    KC_EQL, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
-    _______, _______, KC_BSLS, KC_PIPE, KC_LBRC, KC_RBRC, KC_F12,  KC_NUHS, KC_NUBS, KC_PGUP, KC_PGDN, _______,
+    KC_GRV,  KC_GRV, S(KC_COMM), S(KC_DOT), KC_MINS,  KC_PIPE, KC_CIRC, S(KC_LBRC), S(KC_RBRC), KC_DLR, ARROW_NOT,   _______,
+    _______, KC_EXLM, KC_ASTR,   KC_SLSH, KC_EQL,  KC_AMPR, KC_HASH, KC_LPRN,  KC_RPRN, KC_SCLN, KC_QUOT,    _______,
+    _______, KC_TILD, S(KC_EQL), KC_LBRC, KC_RBRC, KC_PERC, KC_AT,   S(KC_SCLN), KC_COMM, KC_DOT,  S(KC_QUOT), _______,
     _______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY
 ),
 
@@ -220,6 +234,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 #endif
     switch (keycode) {
+        case ARROW_NOT:
+            if (record->event.pressed) {
+                if (mod_state & MOD_MASK_SHIFT) {
+                    del_mods(MOD_MASK_SHIFT);
+                    SEND_STRING("->");
+                    set_mods(mod_state);
+                } else {
+                    SEND_STRING("=>");
+                }
+            }
+            return true;
+            break;
         case LBRC_EQL:
             if (mod_state & MOD_MASK_SHIFT) {
                 if (record->event.pressed) {
@@ -238,6 +264,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
             }
             return false;
+            break;
+        case MT_RSFT_RPRN:
+            if (record->event.pressed) {
+                tap_code16(KC_RPRN);
+                return false;
+            }
+            break;
+        case MT_RGUI_LPRN:
+            if (record->event.pressed) {
+                tap_code16(KC_LPRN);
+                return false;
+            }
             break;
         case BACKLIT:
             if (record->event.pressed) {
