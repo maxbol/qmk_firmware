@@ -46,12 +46,16 @@ const uint16_t PROGMEM lbrc_combo[] = {KC_X, KC_C, COMBO_END};
 const uint16_t PROGMEM rbrc_combo[] = {KC_COMM, KC_DOT, COMBO_END};
 const uint16_t PROGMEM lbrk_combo[] = {KC_C, KC_V, COMBO_END};
 const uint16_t PROGMEM rbrk_combo[] = {KC_M, KC_COMM, COMBO_END};
+const uint16_t PROGMEM rbrk_combo2[] = {KC_SCLN, KC_QUOT, COMBO_END};
+const uint16_t PROGMEM eql_combo[]  = {KC_P, KC_LBRC, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(lbrc_combo, LSFT(KC_LBRC)),
     COMBO(rbrc_combo, LSFT(KC_RBRC)),
     COMBO(lbrk_combo, KC_LBRC),
     COMBO(rbrk_combo, KC_RBRC),
+    COMBO(rbrk_combo2, KC_RBRC),
+    COMBO(eql_combo, KC_EQL),
 };
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
@@ -63,7 +67,8 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+// bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MT_LSFT_SPC:
             return false;
@@ -72,12 +77,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT_planck_grid(
-    'L',  'L',    'L',    'L',    'L',    'L',    'R',    'R',    'R',    'R',    'R', 'R',
-    'L',  'L',    'L',    'L',    'L',    'L',    'R',    'R',    'R',    'R',    'R', 'R',
-    'L', 'L',    'L',    'L',    'L',    'L',    'R',    'R',    'R', 'R',  'R', 'R',
-    'L', 'L', 'L', 'L', '*', '*', '*', '*', 'R', 'R', 'R',   'R'
-);
+const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT_planck_grid('L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'R', 'R', 'R', 'R', 'L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'R', 'R', 'R', 'R', 'L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'R', 'R', 'R', 'R', 'L', 'L', 'L', 'L', '*', '*', '*', '*', 'R', 'R', 'R', 'R');
 
 /* clang-format off */
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -97,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_MINS,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_LBRC,
     MT_LCTL_ESC,  KC_A,    LT_RAISE_S,    KC_D,    MT_LGUI_F,    KC_G,    KC_H,    MT_LGUI_J,    KC_K,    LT_RAISE_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, MT_LALT_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_BSLS,
-    KC_EQL, KC_EQL, KC_EQL, KC_EQL, LT_LOWER_TAB, MT_LCTL_ENTER, MT_LSFT_SPC, LT_RAISE_BSPC, KC_EQL, KC_EQL, KC_EQL,   KC_RBRC
+    KC_EQL, KC_EQL, KC_EQL, KC_EQL, LT_LOWER_TAB, MT_LCTL_ENTER, MT_LSFT_SPC, LT_RAISE_BSPC, KC_BRID, KC_BRIU, KC_VOLD,   KC_VOLU
 ),
 
 /* Lower
@@ -115,7 +115,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TILD, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,       KC_8,       KC_9,    KC_0,    KC_RBRC,
     _______,  KC_F1,  KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_LEFT, KC_DOWN,    KC_UP,      KC_RIGHT,KC_EQL, LSFT(KC_EQL),
     _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  S(KC_NUHS), S(KC_NUBS), KC_HOME, KC_END,  _______,
-    _______, _______, _______, _______, _______, _______, _______, _______,    KC_MNXT,    KC_VOLD, KC_VOLU, KC_MPLY
+    _______, _______, _______, _______, _______, _______, _______, _______,    KC_MPRV,    KC_MNXT, KC_MUTE, KC_MPLY
 ),
 
 /* Raise
@@ -226,7 +226,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 uint8_t mod_state;
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+bool    process_record_user(uint16_t keycode, keyrecord_t *record) {
     mod_state = get_mods();
 #ifdef ENCODER_MAP_ENABLE
     if (IS_ENCODEREVENT(record->event) && record->event.pressed) {
@@ -261,7 +261,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 } else {
                     unregister_code(KC_LBRC);
                 }
-
             }
             return false;
             break;
